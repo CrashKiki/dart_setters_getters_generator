@@ -1,5 +1,5 @@
 import 'package:dart_setters_getters_generator/dart_setters_getters_generator.dart';
-import 'dart_setters_getters_generator_example.setters_getters.g.dart';
+import 'dart_setters_getters_generator_example.gs.g.dart';
 
 
 

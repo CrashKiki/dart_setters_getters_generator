@@ -5,7 +5,7 @@ import 'annotations.dart';
 
 Builder settersGettersBuilder(BuilderOptions options) =>
     LibraryBuilder(SettersGettersGenerator(),
-        generatedExtension: '.setters_getters.g.dart');
+        generatedExtension: '.gs.g.dart');
 
 class SettersGettersGenerator extends GeneratorForAnnotation<GetterSetterVariables> {
   @override
