@@ -1,13 +1,13 @@
 targets:
   $default:
     builders:
-      auto_variables_generator|auto_variables_builder:
+      dart_setters_getters_generator|setters_getters_builder:
         enabled: true
 
 builders:
-  auto_variables_builder:
-    import: "package:auto_variables_generator/src/generator.dart"
-    builder_factories: ["autoVariablesBuilder"]
-    build_extensions: {".dart": [".auto_variables.g.dart"]}
+  setters_getters_builder:
+    import: "package:dart_setters_getters_generator/src/generator.dart"
+    builder_factories: ["settersGettersBuilder"]
+    build_extensions: {".dart": [".setters_getters.g.dart"]}
     auto_apply: dependents
     build_to: source

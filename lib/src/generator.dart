@@ -3,10 +3,11 @@ import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 import 'annotations.dart';
 
-Builder autoVariablesBuilder(BuilderOptions options) =>
-    SharedPartBuilder([AutoVariablesGenerator()], 'auto_variables');
+Builder settersGettersBuilder(BuilderOptions options) =>
+    LibraryBuilder(SettersGettersGenerator(),
+        generatedExtension: '.setters_getters.g.dart');
 
-class AutoVariablesGenerator extends GeneratorForAnnotation<AutoVariables> {
+class SettersGettersGenerator extends GeneratorForAnnotation<AutoVariables> {
   @override
   String generateForAnnotatedElement(
     Element element,
@@ -23,10 +24,6 @@ class AutoVariablesGenerator extends GeneratorForAnnotation<AutoVariables> {
     final className = element.name;
     final buffer = StringBuffer();
 
-    // Add import for the shared ModelVariable class
-    buffer.writeln("import 'package:auto_variables_generator/auto_variables_generator.dart';");
-    buffer.writeln('');
-
     // Get all non-static, non-final fields
     final fields = element.fields
         .where((field) => !field.isStatic && !field.isFinal && !field.hasIgnore)
@@ -42,12 +39,11 @@ class AutoVariablesGenerator extends GeneratorForAnnotation<AutoVariables> {
     // Generate variable objects for each field using the shared ModelVariable class
     for (final field in fields) {
       final fieldName = field.name;
-      final fieldType = field.type.getDisplayString(withNullability: true);
+      final fieldType = field.type.getDisplayString();
 
       buffer.writeln('  late final $fieldName = ModelVariable<$fieldType>(');
       buffer.writeln('    () => _model.$fieldName,');
       buffer.writeln('    (value) => _model.$fieldName = value,');
-      buffer.writeln('    \'$fieldName\',');
       buffer.writeln('  );');
     }
 
@@ -55,9 +51,42 @@ class AutoVariablesGenerator extends GeneratorForAnnotation<AutoVariables> {
     buffer.writeln('');
 
     // Generate extension on the original class
-    buffer.writeln('extension ${className}AutoVariablesExtension on $className {');
+    buffer.writeln('extension ${className}SettersGettersExtension on $className {');
     buffer.writeln('  ${className}Variables get variables => ${className}Variables(this);');
     buffer.writeln('}');
+
+    return buffer.toString();
+  }
+
+  @override
+  String generate(LibraryReader library, BuildStep buildStep) {
+    final buffer = StringBuffer();
+
+    // Add imports at the top of the file only once
+    buffer.writeln("import 'package:dart_setters_getters_generator/dart_setters_getters_generator.dart';");
+
+    // Add import for the original file containing the annotated classes
+    final sourceUri = library.element.source.uri;
+    if (sourceUri.scheme == 'package') {
+      buffer.writeln("import '${sourceUri.toString()}';");
+    } else {
+      // For local files, use relative import
+      final fileName = sourceUri.pathSegments.last;
+      buffer.writeln("import '$fileName';");
+    }
+    buffer.writeln('');
+
+    // Generate code for all annotated classes
+    final annotatedElements = library.annotatedWith(typeChecker);
+    for (final annotatedElement in annotatedElements) {
+      final generatedCode = generateForAnnotatedElement(
+        annotatedElement.element,
+        annotatedElement.annotation,
+        buildStep,
+      );
+      buffer.writeln(generatedCode);
+      buffer.writeln('');
+    }
 
     return buffer.toString();
   }
