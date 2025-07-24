@@ -1,0 +1,13 @@
+targets:
+  $default:
+    builders:
+      auto_variables_generator|auto_variables_builder:
+        enabled: true
+
+builders:
+  auto_variables_builder:
+    import: "package:auto_variables_generator/src/generator.dart"
+    builder_factories: ["autoVariablesBuilder"]
+    build_extensions: {".dart": [".auto_variables.g.dart"]}
+    auto_apply: dependents
+    build_to: source
