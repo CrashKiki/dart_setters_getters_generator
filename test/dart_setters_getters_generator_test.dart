@@ -1,7 +1,8 @@
 import 'package:dart_setters_getters_generator/dart_setters_getters_generator.dart';
-import 'package:test/test.dart';
-import 'dart_setters_getters_generator_test.gs.g.dart';
 import 'package:dart_setters_getters_generator/src/custom_types.dart';
+import 'package:test/test.dart';
+
+part 'dart_setters_getters_generator_test.gs.dart';
 
 @GetterSetterVariables()
 class TestModel {

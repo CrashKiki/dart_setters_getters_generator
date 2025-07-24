@@ -1,3 +1,11 @@
+
+class ModelKeyVariable<T> extends ModelVariable<T> {
+  /// Creates a variable that can be used to access a model field
+  ModelKeyVariable(this.key, super._getter, super._setter);
+  final String key;
+
+}
+
 /// Generic variable wrapper that provides getter/setter access to model fields
 /// This class is used by the AutoVariables code generator
 class ModelVariable<T> {

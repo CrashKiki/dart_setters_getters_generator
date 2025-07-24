@@ -1,12 +1,11 @@
 import 'package:dart_setters_getters_generator/dart_setters_getters_generator.dart';
-import 'dart_setters_getters_generator_example.gs.g.dart';
 import 'package:dart_setters_getters_generator/src/custom_types.dart';
 
-
-
+part 'dart_setters_getters_generator_example.gs.dart';
 
 @GetterSetterVariables()
 class Person {
+  @GetterSetterAPIKey(key: 'my_name')
   String name = '';
   int age = 0;
   String email = '';
