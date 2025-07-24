@@ -1,7 +1,8 @@
 name: dart_setters_getters_generator
-description: A starting point for Dart libraries or applications.
+description: A Dart code generator that creates ModelVariable wrappers for class fields, providing enhanced getter/setter functionality with change detection.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/CrashKiki/dart_setters_getters_generator
+homepage: https://github.com/CrashKiki/dart_setters_getters_generator
 
 environment:
   sdk: ^3.8.1
