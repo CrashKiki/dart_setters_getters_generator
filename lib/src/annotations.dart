@@ -6,7 +6,10 @@ class GetterSetterVariables {
 }
 
 class GetterSetterAPIKey {
-  const GetterSetterAPIKey({required this.key, this.includeInMap = true});
+  const GetterSetterAPIKey({
+    required this.key,
+    this.includeInMap = true,
+  });
 
   final String key;
   final bool includeInMap;

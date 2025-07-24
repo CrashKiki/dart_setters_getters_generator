@@ -7,9 +7,12 @@ part 'dart_setters_getters_generator_example.gs.dart';
 class Person {
   @GetterSetterAPIKey(key: 'my_name')
   String name = '';
+  @GetterSetterAPIKey(key: 'user_age')
   int age = 0;
+  @GetterSetterAPIKey(key: 'email_address')
   String email = '';
   bool isActive = true;
+  @GetterSetterAPIKey(key: 'home_address')
   Address address = Address();
   Contact contact = Contact();
 
@@ -18,8 +21,11 @@ class Person {
 
 @GetterSetterVariables()
 class Product {
+  @GetterSetterAPIKey(key: 'product_title')
   String title = '';
+  @GetterSetterAPIKey(key: 'product_price')
   double price = 0.0;
+  @GetterSetterAPIKey(key: 'stock_quantity')
   int quantity = 0;
   String description = '';
   Category category = Category();
@@ -107,4 +113,32 @@ void main() {
   currentAddress.street = '456 Oak Avenue';
   person.variables.address.set(currentAddress);
   print('Updated address: ${person.variables.address.value}');
+
+  print('\n=== ApiConvertible and apiKeyMap Example ===');
+  print('Person apiKeyVariables list:');
+  for (final variable in person.variables.apiKeyVariables) {
+    print('  - ${variable.key}: ${variable.value}');
+  }
+
+  print('\nPerson apiKeyMap (showing ApiConvertible conversion):');
+  final personApiMap = person.variables.apiKeyMap;
+  personApiMap.forEach((key, value) {
+    print('  $key: $value');
+  });
+
+  print('\nProduct apiKeyVariables list:');
+  for (final variable in product.variables.apiKeyVariables) {
+    print('  - ${variable.key}: ${variable.value}');
+  }
+
+  print('\nProduct apiKeyMap:');
+  final productApiMap = product.variables.apiKeyMap;
+  productApiMap.forEach((key, value) {
+    print('  $key: $value');
+  });
+
+  print('\n=== Demonstrating Address ApiConvertible mixin ===');
+  print('Raw address object: ${person.variables.address.value}');
+  print('Address as API value (via toApiValue()): ${person.variables.address.value.toApiValue()}');
+  print('Notice how in apiKeyMap, the address is automatically converted to a Map!');
 }

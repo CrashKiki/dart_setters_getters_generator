@@ -120,8 +120,10 @@ class SettersGettersGenerator
       buffer.writeln('');
       buffer.writeln('  /// Convert apiKeyVariables to a Map<String, dynamic>');
       buffer.writeln('  Map<String, dynamic> get apiKeyMap => {');
-      buffer.writeln('    for (final e in apiKeyVariables)');
-      buffer.writeln('      e.key: e.value,');
+      buffer.writeln('    for (final variable in apiKeyVariables)');
+      buffer.writeln('      variable.key: variable.value is ApiConvertible');
+      buffer.writeln('        ? (variable.value as ApiConvertible).toApiValue()');
+      buffer.writeln('        : variable.value,');
       buffer.writeln('  };');
     }
 

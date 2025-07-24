@@ -1,5 +1,7 @@
+import 'package:dart_setters_getters_generator/dart_setters_getters_generator.dart';
+
 /// Custom classes for testing import detection in the dart_setters_getters_generator package
-class Address {
+class Address with ApiConvertible{
   String street = '';
   String city = '';
   String zipCode = '';
@@ -13,21 +15,13 @@ class Address {
   });
 
   @override
-  String toString() => '$street, $city $zipCode, $country';
+  toApiValue() => {
+    'street': street,
+    'city': city,
+    'zipCode': zipCode,
+    'country': country,
+  };
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Address &&
-          runtimeType == other.runtimeType &&
-          street == other.street &&
-          city == other.city &&
-          zipCode == other.zipCode &&
-          country == other.country;
-
-  @override
-  int get hashCode =>
-      street.hashCode ^ city.hashCode ^ zipCode.hashCode ^ country.hashCode;
 }
 
 class Contact {
@@ -40,21 +34,6 @@ class Contact {
     this.email = '',
     this.address,
   });
-
-  @override
-  String toString() => 'Contact(phone: $phone, email: $email, address: $address)';
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Contact &&
-          runtimeType == other.runtimeType &&
-          phone == other.phone &&
-          email == other.email &&
-          address == other.address;
-
-  @override
-  int get hashCode => phone.hashCode ^ email.hashCode ^ address.hashCode;
 }
 
 class Category {
