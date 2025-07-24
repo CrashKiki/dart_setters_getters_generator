@@ -10,6 +10,9 @@ Builder settersGettersBuilder(BuilderOptions options) =>
 
 class SettersGettersGenerator extends GeneratorForAnnotation<GetterSetterVariables> {
   @override
+  TypeChecker get typeChecker => TypeChecker.fromRuntime(GetterSetterVariables);
+
+  @override
   String generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
@@ -25,9 +28,15 @@ class SettersGettersGenerator extends GeneratorForAnnotation<GetterSetterVariabl
     final className = element.name;
     final buffer = StringBuffer();
 
-    // Get all non-static, non-final fields
+    // Get all non-static, non-final fields that are settable
     final fields = element.fields
-        .where((field) => !field.isStatic && !field.isFinal && !field.hasIgnore)
+        .where((field) =>
+            !field.isStatic &&
+            !field.isFinal &&
+            !field.hasIgnore &&
+            !field.isConst &&
+            field.setter != null &&  // Has a setter (not getter-only)
+            !field.isSynthetic)      // Exclude synthetic fields
         .toList();
 
     // Generate the variables container class

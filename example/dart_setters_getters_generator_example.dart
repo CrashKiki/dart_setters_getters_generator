@@ -13,6 +13,8 @@ class Person {
   bool isActive = true;
   Address address = Address();
   Contact contact = Contact();
+
+  bool get isAdult => age >= 18; // No variable generated for getters/setters
 }
 
 @GetterSetterVariables()
