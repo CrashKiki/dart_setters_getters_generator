@@ -1,5 +1,7 @@
 import 'package:dart_setters_getters_generator/dart_setters_getters_generator.dart';
 import 'dart_setters_getters_generator_example.gs.g.dart';
+import 'package:dart_setters_getters_generator/src/custom_types.dart';
+
 
 
 
@@ -9,6 +11,8 @@ class Person {
   int age = 0;
   String email = '';
   bool isActive = true;
+  Address address = Address();
+  Contact contact = Contact();
 }
 
 @GetterSetterVariables()
@@ -17,6 +21,8 @@ class Product {
   double price = 0.0;
   int quantity = 0;
   String description = '';
+  Category category = Category();
+  List<Category> tags = [];
 }
 
 void main() {
@@ -31,9 +37,25 @@ void main() {
   person.variables.age.value = 30;
   person.variables.email.value = 'john@example.com';
 
+  // Test custom object fields
+  person.variables.address.value = Address(
+    street: '123 Main St',
+    city: 'San Francisco',
+    zipCode: '94105',
+    country: 'USA',
+  );
+
+  person.variables.contact.value = Contact(
+    phone: '+1-555-123-4567',
+    email: 'john.doe@example.com',
+    address: person.variables.address.value,
+  );
+
   print('Updated name: ${person.variables.name.value}');
   print('Age: ${person.variables.age.value}');
   print('Email: ${person.variables.email.value}');
+  print('Address: ${person.variables.address.value}');
+  print('Contact: ${person.variables.contact.value}');
   print('Is active: ${person.variables.isActive.value}');
 
   // Demonstrate using the alternative setter/getter methods
@@ -49,10 +71,25 @@ void main() {
   product.variables.quantity.value = 10;
   product.variables.description.value = 'High-performance laptop';
 
+  // Test custom object and list of custom objects
+  product.variables.category.value = Category(
+    id: 1,
+    name: 'Electronics',
+    description: 'Electronic devices and accessories',
+  );
+
+  product.variables.tags.value = [
+    Category(id: 10, name: 'Computers', description: 'Computer equipment'),
+    Category(id: 11, name: 'Portable', description: 'Portable devices'),
+    Category(id: 12, name: 'Business', description: 'Business equipment'),
+  ];
+
   print('Product: ${product.variables.title.value}');
   print('Price: \$${product.variables.price.value}');
   print('Quantity: ${product.variables.quantity.value}');
   print('Description: ${product.variables.description.value}');
+  print('Category: ${product.variables.category.value}');
+  print('Tags: ${product.variables.tags.value}');
 
   // Demonstrate that the ModelVariable only updates when values change
   print('\n=== Change Detection Example ===');
@@ -63,4 +100,10 @@ void main() {
   print('Setting price to new value...');
   product.variables.price.value = 1299.99;
   print('New price: \$${product.variables.price.value}');
+
+  print('\n=== Custom Object Modification Example ===');
+  final currentAddress = person.variables.address.get();
+  currentAddress.street = '456 Oak Avenue';
+  person.variables.address.set(currentAddress);
+  print('Updated address: ${person.variables.address.value}');
 }

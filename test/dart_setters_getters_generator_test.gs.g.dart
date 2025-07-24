@@ -4,8 +4,9 @@
 // SettersGettersGenerator
 // **************************************************************************
 
-import 'package:dart_setters_getters_generator/dart_setters_getters_generator.dart';
 import 'dart_setters_getters_generator_test.dart';
+import 'package:dart_setters_getters_generator/dart_setters_getters_generator.dart';
+import 'package:dart_setters_getters_generator/src/custom_types.dart';
 
 class TestModelVariables {
   TestModelVariables(this._model);
@@ -35,6 +36,18 @@ class TestModelVariables {
   late final metadata = ModelVariable<Map<String, dynamic>>(
     () => _model.metadata,
     (value) => _model.metadata = value,
+  );
+  late final address = ModelVariable<Address>(
+    () => _model.address,
+    (value) => _model.address = value,
+  );
+  late final contact = ModelVariable<Contact>(
+    () => _model.contact,
+    (value) => _model.contact = value,
+  );
+  late final categories = ModelVariable<List<Category>>(
+    () => _model.categories,
+    (value) => _model.categories = value,
   );
 }
 

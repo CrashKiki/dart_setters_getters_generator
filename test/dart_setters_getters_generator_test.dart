@@ -1,6 +1,7 @@
 import 'package:dart_setters_getters_generator/dart_setters_getters_generator.dart';
 import 'package:test/test.dart';
 import 'dart_setters_getters_generator_test.gs.g.dart';
+import 'package:dart_setters_getters_generator/src/custom_types.dart';
 
 @GetterSetterVariables()
 class TestModel {
@@ -12,6 +13,9 @@ class TestModel {
   final finalVariable = 'final value';
   List<String> tags = [];
   Map<String, dynamic> metadata = {};
+  Address address = Address();
+  Contact contact = Contact();
+  List<Category> categories = [];
 }
 
 void main() {
@@ -123,6 +127,43 @@ void main() {
         variable.value['key3'] = 'value3';
         expect(variable.value, equals({'key1': 'value1', 'key2': 2, 'key3': 'value3'}));
         expect(model.metadata, equals({'key1': 'value1', 'key2': 2, 'key3': 'value3'}));
+      });
+
+      test('should handle custom object fields correctly', () {
+        final addressVariable = model.variables.address;
+        final contactVariable = model.variables.contact;
+        final categoriesVariable = model.variables.categories;
+
+        // Test Address object
+        addressVariable.value = Address(
+          street: '123 Main St',
+          city: 'Anytown',
+          zipCode: '12345',
+          country: 'USA'
+        );
+        expect(addressVariable.value.street, equals('123 Main St'));
+        expect(addressVariable.value.city, equals('Anytown'));
+        expect(addressVariable.value.zipCode, equals('12345'));
+        expect(addressVariable.value.country, equals('USA'));
+
+        // Test Contact object
+        contactVariable.value = Contact(
+          phone: '+1-555-123-4567',
+          email: 'john.doe@example.com'
+        );
+        expect(contactVariable.value.phone, equals('+1-555-123-4567'));
+        expect(contactVariable.value.email, equals('john.doe@example.com'));
+
+        // Test Category list
+        categoriesVariable.value = [
+          Category(id: 1, name: 'Category1', description: 'First category'),
+          Category(id: 2, name: 'Category2', description: 'Second category')
+        ];
+        expect(categoriesVariable.value.length, equals(2));
+        expect(categoriesVariable.value[0].name, equals('Category1'));
+        expect(categoriesVariable.value[1].name, equals('Category2'));
+        expect(categoriesVariable.value[0].id, equals(1));
+        expect(categoriesVariable.value[1].id, equals(2));
       });
     });
   });

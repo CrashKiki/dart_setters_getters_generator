@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 import 'annotations.dart';
@@ -61,34 +62,93 @@ class SettersGettersGenerator extends GeneratorForAnnotation<GetterSetterVariabl
   @override
   String generate(LibraryReader library, BuildStep buildStep) {
     final buffer = StringBuffer();
+    final imports = <String>{};
 
-    // Add imports at the top of the file only once
-    buffer.writeln("import 'package:dart_setters_getters_generator/dart_setters_getters_generator.dart';");
+    // Always add the main package import
+    imports.add("import 'package:dart_setters_getters_generator/dart_setters_getters_generator.dart';");
 
     // Add import for the original file containing the annotated classes
     final sourceUri = library.element.source.uri;
     if (sourceUri.scheme == 'package') {
-      buffer.writeln("import '${sourceUri.toString()}';");
+      imports.add("import '${sourceUri.toString()}';");
     } else {
       // For local files, use relative import
       final fileName = sourceUri.pathSegments.last;
-      buffer.writeln("import '$fileName';");
+      imports.add("import '$fileName';");
+    }
+
+    // Generate code for all annotated classes and collect additional imports
+    final annotatedElements = library.annotatedWith(typeChecker);
+    final generatedCodeParts = <String>[];
+
+    for (final annotatedElement in annotatedElements) {
+      if (annotatedElement.element is ClassElement) {
+        final classElement = annotatedElement.element as ClassElement;
+
+        // Collect imports for field types
+        _collectFieldTypeImports(classElement, imports);
+
+        final generatedCode = generateForAnnotatedElement(
+          annotatedElement.element,
+          annotatedElement.annotation,
+          buildStep,
+        );
+        generatedCodeParts.add(generatedCode);
+      }
+    }
+
+    // Write all imports at the top
+    for (final import in imports.toList()..sort()) {
+      buffer.writeln(import);
     }
     buffer.writeln('');
 
-    // Generate code for all annotated classes
-    final annotatedElements = library.annotatedWith(typeChecker);
-    for (final annotatedElement in annotatedElements) {
-      final generatedCode = generateForAnnotatedElement(
-        annotatedElement.element,
-        annotatedElement.annotation,
-        buildStep,
-      );
-      buffer.writeln(generatedCode);
+    // Write all generated code
+    for (final code in generatedCodeParts) {
+      buffer.writeln(code);
       buffer.writeln('');
     }
 
     return buffer.toString();
+  }
+
+  void _collectFieldTypeImports(ClassElement classElement, Set<String> imports) {
+    final fields = classElement.fields
+        .where((field) => !field.isStatic && !field.isFinal && !field.hasIgnore);
+
+    for (final field in fields) {
+      _addImportsForType(field.type, imports);
+    }
+  }
+
+  void _addImportsForType(DartType type, Set<String> imports) {
+    // Handle the main type
+    final element = type.element;
+    if (element != null && element.library != null) {
+      final library = element.library!;
+      final libraryUri = library.source.uri;
+
+      // Only add import if it's not from dart:core and not the current library
+      if (!libraryUri.toString().startsWith('dart:core') &&
+          !libraryUri.toString().startsWith('dart:_internal')) {
+        if (libraryUri.scheme == 'package') {
+          imports.add("import '${libraryUri.toString()}';");
+        } else if (libraryUri.scheme == 'file') {
+          // For local files, try to get relative path
+          final fileName = libraryUri.pathSegments.last;
+          if (fileName.isNotEmpty) {
+            imports.add("import '$fileName';");
+          }
+        }
+      }
+    }
+
+    // Handle generic type arguments (like List<CustomClass>, Map<String, CustomClass>)
+    if (type is ParameterizedType) {
+      for (final typeArg in type.typeArguments) {
+        _addImportsForType(typeArg, imports);
+      }
+    }
   }
 }
 

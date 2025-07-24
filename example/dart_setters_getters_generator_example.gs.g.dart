@@ -4,8 +4,9 @@
 // SettersGettersGenerator
 // **************************************************************************
 
-import 'package:dart_setters_getters_generator/dart_setters_getters_generator.dart';
 import 'dart_setters_getters_generator_example.dart';
+import 'package:dart_setters_getters_generator/dart_setters_getters_generator.dart';
+import 'package:dart_setters_getters_generator/src/custom_types.dart';
 
 class PersonVariables {
   PersonVariables(this._model);
@@ -27,6 +28,14 @@ class PersonVariables {
   late final isActive = ModelVariable<bool>(
     () => _model.isActive,
     (value) => _model.isActive = value,
+  );
+  late final address = ModelVariable<Address>(
+    () => _model.address,
+    (value) => _model.address = value,
+  );
+  late final contact = ModelVariable<Contact>(
+    () => _model.contact,
+    (value) => _model.contact = value,
   );
 }
 
@@ -54,6 +63,14 @@ class ProductVariables {
   late final description = ModelVariable<String>(
     () => _model.description,
     (value) => _model.description = value,
+  );
+  late final category = ModelVariable<Category>(
+    () => _model.category,
+    (value) => _model.category = value,
+  );
+  late final tags = ModelVariable<List<Category>>(
+    () => _model.tags,
+    (value) => _model.tags = value,
   );
 }
 
