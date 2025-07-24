@@ -3,7 +3,7 @@ import 'dart_setters_getters_generator_example.setters_getters.g.dart';
 
 
 
-@AutoVariables()
+@GetterSetterVariables()
 class Person {
   String name = '';
   int age = 0;
@@ -11,7 +11,7 @@ class Person {
   bool isActive = true;
 }
 
-@AutoVariables()
+@GetterSetterVariables()
 class Product {
   String title = '';
   double price = 0.0;

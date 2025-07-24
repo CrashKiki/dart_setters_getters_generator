@@ -7,7 +7,7 @@ Builder settersGettersBuilder(BuilderOptions options) =>
     LibraryBuilder(SettersGettersGenerator(),
         generatedExtension: '.setters_getters.g.dart');
 
-class SettersGettersGenerator extends GeneratorForAnnotation<AutoVariables> {
+class SettersGettersGenerator extends GeneratorForAnnotation<GetterSetterVariables> {
   @override
   String generateForAnnotatedElement(
     Element element,

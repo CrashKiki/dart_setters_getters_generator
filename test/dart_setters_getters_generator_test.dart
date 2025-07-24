@@ -2,7 +2,7 @@ import 'package:dart_setters_getters_generator/dart_setters_getters_generator.da
 import 'package:test/test.dart';
 import 'dart_setters_getters_generator_test.setters_getters.g.dart';
 
-@AutoVariables()
+@GetterSetterVariables()
 class TestModel {
   TestModel(this.name);
   String name;
